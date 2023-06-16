@@ -3,7 +3,7 @@
 
 ### Clone the repository 
 ```command 
-    git clone <repo URL>
+    git clone https://github.com/salmansheri/reddit-clone.git
 
 ```
 
