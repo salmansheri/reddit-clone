@@ -11,10 +11,10 @@ datasource db {
 }
 
 model Account {
-  id                Int  @id @default(autoincrement()) 
-  userId            Int  @unique
+  id                Int     @id @default(autoincrement())
+  userId            Int     @unique
   type              String
-  provider          String 
+  provider          String
   providerAccountId String
   refresh_token     String? @db.Text
   access_token      String? @db.Text
@@ -29,16 +29,21 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
+enum VoteType {
+  UP
+  DOWN
+}
+
 model Session {
-  id           Int   @id @default(autoincrement()) 
+  id           Int      @id @default(autoincrement())
   sessionToken String   @unique
-  userId       Int @unique 
+  userId       Int      @unique
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id                 Int        @id @default(autoincrement())
+  id                Int            @id @default(autoincrement())
   name              String?
   email             String?        @unique
   emailVerified     DateTime?
@@ -57,14 +62,13 @@ model User {
 }
 
 model Subreddit {
-  id        Int   @id @default(autoincrement()) 
-  name      String   @unique 
+  id        Int      @id @default(autoincrement())
+  name      String  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]
-  
 
-  creatorId   Int? @unique
+  creatorId   Int?          
   Creator     User?          @relation("CreatedBy", fields: [creatorId], references: [id])
   subscribers Subscription[]
 
@@ -73,37 +77,36 @@ model Subreddit {
 
 model Subscription {
   user        User      @relation(fields: [userId], references: [id])
-  userId      Int @unique
+  userId      Int     
   subreddit   Subreddit @relation(fields: [subredditId], references: [id])
-  subredditId Int @unique
+  subredditId Int      
 
   @@id([userId, subredditId])
 }
 
 model Post {
-  id          Int    @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   content     Json?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   author      User      @relation(fields: [authorId], references: [id])
-  authorId    Int @unique
+  authorId    Int       
   subreddit   Subreddit @relation(fields: [subredditId], references: [id])
-  subredditId Int @unique
+  subredditId Int      
   comments    Comment[]
   votes       Vote[]
 }
 
 model Comment {
-  id          Int   @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   text      String
   createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int @unique
+  authorId  Int     
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    Int @unique
-
-  replyToId Int? 
+  postId    Int   
+  replyToId Int?
   replyTo   Comment?  @relation("ReplyTo", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   replies   Comment[] @relation("ReplyTo")
 
@@ -114,20 +117,20 @@ model Comment {
 
 model Vote {
   user   User     @relation(fields: [userId], references: [id])
-  userId Int @unique
+  userId Int     
   post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId Int @unique
- 
+  postId Int     
+  type   VoteType
 
   @@id([userId, postId])
 }
 
 model CommentVote {
   user      User     @relation(fields: [userId], references: [id])
-  userId    Int @unique
+  userId    Int     
   comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId Int @unique
-  
+  commentId Int      
+  type      VoteType
 
   @@id([userId, commentId])
 }

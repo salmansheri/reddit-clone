@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "VoteType" AS ENUM ('UP', 'DOWN');
+
 -- CreateTable
 CREATE TABLE "Account" (
     "id" SERIAL NOT NULL,
@@ -88,6 +91,7 @@ CREATE TABLE "Comment" (
 CREATE TABLE "Vote" (
     "userId" INTEGER NOT NULL,
     "postId" INTEGER NOT NULL,
+    "type" "VoteType" NOT NULL,
 
     CONSTRAINT "Vote_pkey" PRIMARY KEY ("userId","postId")
 );
@@ -96,6 +100,7 @@ CREATE TABLE "Vote" (
 CREATE TABLE "CommentVote" (
     "userId" INTEGER NOT NULL,
     "commentId" INTEGER NOT NULL,
+    "type" "VoteType" NOT NULL,
 
     CONSTRAINT "CommentVote_pkey" PRIMARY KEY ("userId","commentId")
 );

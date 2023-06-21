@@ -3,8 +3,9 @@
 import Link from 'next/link'
 import React from 'react'
 import { Icons } from './Icons'
-import { buttonVariants } from './ui/Button'
-import { useSession } from 'next-auth/react'; 
+import { Button, buttonVariants } from './ui/Button'
+import { signOut, useSession } from 'next-auth/react'; 
+import UserProfile from './UserProfile';
 
 const Navbar = () => {
     const {data: session } = useSession(); 
@@ -28,7 +29,12 @@ const Navbar = () => {
             </Link>
             {/* search bar  */}
 
-            <Link href="/sign-in" className={buttonVariants()}>Sign in</Link>
+            {!session?.user?.email ? (
+
+                <Link href="/signin" className={buttonVariants()}>Sign in</Link>
+            ): (
+               <UserProfile user={session.user} />
+            )}
 
         </div>
     </div>

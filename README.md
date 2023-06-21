@@ -12,6 +12,19 @@
     pnpm install 
 
 ```
+---
+```command
+    npm install 
+
+```
+
+---
+```command
+    yarn install 
+
+```
+---
+
 
 ### Run the project 
 
